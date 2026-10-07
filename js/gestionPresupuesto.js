@@ -19,7 +19,7 @@ function mostrarPresupuesto() {
     return `Tu presupuesto actual es de ${presupuesto} €`;
 }
 
-function CrearGasto(descripcion, valor) {
+function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
 
     this.descripcion = descripcion;
 
@@ -29,8 +29,26 @@ function CrearGasto(descripcion, valor) {
         this.valor = 0;
     }
 
+    if (typeof fecha === "string" && !isNaN(Date.parse(fecha))) {
+        this.fecha = Date.parse(fecha);
+    } else {
+        this.fecha = Date.now();
+    }
+
+    this.etiquetas = [];
+
     this.mostrarGasto = function() {
         return `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €`;
+    };
+
+    this.mostrarGastoCompleto = function() {
+        let texto = `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €.\n`;
+        texto += `Fecha: ${new Date(this.fecha).toLocaleString()}\n`;
+        texto += "Etiquetas:";
+        this.etiquetas.forEach(etiqueta => {
+            texto += `\n - ${etiqueta}`;
+        });
+        return texto;
     };
 
     this.actualizarDescripcion = function(nuevaDescripcion) {
@@ -42,26 +60,53 @@ function CrearGasto(descripcion, valor) {
             this.valor = nuevoValor;
         }
     };
+
+    this.actualizarFecha = function(nuevaFecha) {
+        if (typeof nuevaFecha === "string" && !isNaN(Date.parse(nuevaFecha))) {
+            this.fecha = Date.parse(nuevaFecha);
+        }
+    };
+
+    this.anyadirEtiquetas = function(...nuevasEtiquetas) {
+        nuevasEtiquetas.forEach(etiqueta => {
+            if (!this.etiquetas.includes(etiqueta)) {
+                this.etiquetas.push(etiqueta);
+            }
+        });
+    };
+
+    this.borrarEtiquetas = function(...etiquetasABorrar) {
+        this.etiquetas = this.etiquetas.filter(etiqueta => !etiquetasABorrar.includes(etiqueta));
+    };
+
+    if (etiquetas.length > 0) {
+        this.anyadirEtiquetas(...etiquetas);
+    }
 }
 
 function listarGastos(){
-
+    return gastos;
 }
 
-function anyadirGasto(){
-    
+function anyadirGasto(gasto){
+    gasto.id = idGasto;
+    idGasto++;
+    gastos.push(gasto);
 }
 
-function borrarGasto(){
-    
+function borrarGasto(id){
+    const posicion = gastos.findIndex(gasto => gasto.id === id);
+    if (posicion !== -1) {
+        gastos.splice(posicion, 1);
+    }
 }
 
 function calcularTotalGastos(){
-    
+    return gastos.reduce((total, gasto) => total + gasto.valor, 0);
 }
 
 function calcularBalance(){
-    
+    return presupuesto - calcularTotalGastos();
 }
 
 
