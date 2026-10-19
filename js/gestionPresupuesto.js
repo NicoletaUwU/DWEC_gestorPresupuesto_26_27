@@ -46,8 +46,9 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
         texto += `Fecha: ${new Date(this.fecha).toLocaleString()}\n`;
         texto += "Etiquetas:";
         this.etiquetas.forEach(etiqueta => {
-            texto += `\n - ${etiqueta}`;
+            texto += `\n- ${etiqueta}`;
         });
+        texto += "\n";
         return texto;
     };
 
