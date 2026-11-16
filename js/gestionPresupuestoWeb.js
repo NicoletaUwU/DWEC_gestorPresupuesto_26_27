@@ -92,4 +92,32 @@ function repintar() {
     });
 }
 
-export { mostrarDatoEnId, mostrarGastoWeb, mostrarGastosAgrupadosWeb, repintar };
+function actualizarPresupuestoWeb() {
+    const nuevoPresupuesto = Number(prompt("Introduce el nuevo presupuesto:"));
+    gestionPresupuesto.actualizarPresupuesto(nuevoPresupuesto);
+    repintar();
+}
+
+function nuevoGastoWeb() {
+    const descripcion = prompt("Introduce la descripción del gasto:");
+    const valor = Number(prompt("Introduce el valor del gasto:"));
+    const fecha = prompt("Introduce la fecha del gasto (yyyy-mm-dd):");
+    const etiquetas = prompt("Introduce las etiquetas separadas por comas:").split(",");
+
+    const gasto = new gestionPresupuesto.CrearGasto(descripcion, valor, fecha, ...etiquetas);
+    gestionPresupuesto.anyadirGasto(gasto);
+
+    repintar();
+}
+
+document.getElementById("actualizarpresupuesto").addEventListener("click", actualizarPresupuestoWeb);
+document.getElementById("anyadirgasto").addEventListener("click", nuevoGastoWeb);
+
+export {
+    mostrarDatoEnId,
+    mostrarGastoWeb,
+    mostrarGastosAgrupadosWeb,
+    repintar,
+    actualizarPresupuestoWeb,
+    nuevoGastoWeb
+};
